@@ -37,4 +37,4 @@ You should able to see this sentence from your temrinal when the server is up.
 
 ### USER MANAGEMENT
  You have to sign up first to use the user management feature
-(![alt text]https://cloud.githubusercontent.com/assets/2655537/24831419/c4bb1b06-1c5e-11e7-9146-51d58e176a3e.png "User Management screenshot")
+(![alt text](https://cloud.githubusercontent.com/assets/2655537/24831419/c4bb1b06-1c5e-11e7-9146-51d58e176a3e.png "User Management screenshot")
