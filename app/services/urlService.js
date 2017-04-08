@@ -1,5 +1,8 @@
 var UrlModel = require("../models/urlModel");
 var redis = require("redis");
+var lexicon = require("emoji-lexicon");
+var lruMap = require("../services/lruMap");
+var cachedMap = require("../services/cachedMap");
 var host = process.env.REDIS_PORT_6379_TCP_ADDR;
 var port = process.env.REDIS_PORT_6379_TCP_PORT;
 
@@ -61,39 +64,42 @@ var getShortUrl = function (username, longUrl, callback) {
 
 var generateShortUrl = function (callback) {
 
-    UrlModel.count({}, function (err, data) {
-        callback(convertTo62(data));
-    });
+    callback(convertToEmoji());
 
 };
 
-var convertTo62 = function (num) {
-    var result = "";
+var convertToEmoji = function () {
     do {
-        result = encode[num % 62] + result;
-        num = Math.floor(num / 62);
-    } while (num);
+        var result = "";
+        for (var x = 0; x < 6; x++) {
+            result += lexicon[Math.floor(Math.random() * lexicon.length)];
+        }
+    } while (cachedMap.map.has(result));
 
     return result;
+
 };
 
 var getLongUrl = function (shortUrl, callback) {
-    redisClient.get(shortUrl, function (err, longUrl) {
-        if (longUrl) {
-            callback({
-                shortUrl: shortUrl,
-                longUrl: longUrl
-            });
-        } else {
-            UrlModel.findOne({shortUrl: shortUrl}, function (err, data) {
-                callback(data);
-                if (data) {
-                    redisClient.set(data.shortUrl, data.longUrl);
-                    redisClient.set(data.longUrl, data.shortUrl);
-                }
-            })
-        }
-    });
+    console.log("need a longUrl from shortUrl " + shortUrl);
+    var longUrlNode = lruMap.LRUCacheGet(shortUrl);
+    if (longUrlNode != 'undefined') {
+        console.log('Url is cached');
+        console.log('short Url is  ' + longUrlNode.shortUrl + "long Url is " + longUrlNode.longUrl);
+        callback({
+            shortUrl: longUrlNode.key,
+            longUrl: longUrlNode.value
+        });
+    } else {
+        console.log('Mongo is called');
+        UrlModel.findOne({shortUrl: shortUrl}, function (err, data) {
+            callback(data);
+            if (data) {
+                lruMap.LRUCacheSet(data.shortUrl, data.longUrl);
+                lruMap.LRUCacheSet(data.longUrl, data.shortUrl);
+            }
+        })
+    }
 };
 
 var getMyUrls = function (username, callback) {
