@@ -14,7 +14,7 @@ var host = process.env.REDIS_PORT_6379_TCP_ADDR;
 var port = process.env.REDIS_PORT_6379_TCP_PORT;
 var redisClient = redis.createClient(port, host);
 
-mongoose.connect("mongodb://user:user@ds139277.mlab.com:39277/tinyurl-3");
+mongoose.connect("mongodb://user:user@ds057816.mlab.com:57816/tinyurl");
 
 app.use("/public", express.static(__dirname + "/public"));
 app.use("/node_modules", express.static(__dirname + "/node_modules"));
