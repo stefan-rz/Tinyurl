@@ -2,21 +2,17 @@
 It aims to give a shorter url in emoji format with information regarding times of clicks, locations, history track from user's input. It is inspired by Google URL Shortener. 
 # How to run it in you local
 
-### Clone project to your local
-
+### Clone project to your local  
+s
 `git clone https://github.com/ruihanzou/Tinyurl.git`
 
-### To install requried pakage, go into app folder
-	1. cd app
-	2. npm install
+### Install dependencies
+	cd app && npm install
 
-### Go back to the parent folder at which docker-compose.yml is put after finishing the pakage installation
 
-	cd ..
+### Go back to the parent folder at which docker-compose.yml is put after finishing the pakage installation and run the following command when your docker is up. 
 
-### Run the following command when your docker is up. 
-
-	docker-compose up --build
+	cd .. && docker-compose up --build
 
 <!--It takes a while if this is your first run.--> 
 
